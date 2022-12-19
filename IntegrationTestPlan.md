@@ -30,37 +30,72 @@ use case.*
 integration tests and add these automated tests to the integration test
 package.*
 
-## Use Case: *[use case name]*
+## Use Case: *[New user signs up and posts one comment ]*
 
-### **Test case name: *[test method name, following ATA conventions]***
+### **Test case name: *[newUser_withValidInputs_doesNotExceedThreshold]***
 
 **Acceptance criteria:**
 
-1. *(List what must be true to verify the use case has been implemented
-   correctly)*
+1. *The new user does not exceed the comment threshold within the probationary period, the account remains active.* 
 
-**Endpoint(s) tested:**
+**Endpoint(s) tested: /comment**
 
 1. *(List only the endpoints actually tested (the "WHEN" part of your
-   test, which might have multiple steps in an integration test))*
+   test, which might have multiple steps in an integration test)) /comment*
 
-**GIVEN (Preconditions):**
+**GIVEN (Preconditions): user was created less than 24 hours ago**
 
-1. *(List the conditions that must be true for the test case to take
-   place.)*
+1. *(List the conditions that must be true for the test case to take)* 
 
-**WHEN (Action(s)):**
+**WHEN (Action(s)):User account created less than 24 hours ago has not exceeded comment threshold within probation period**
 
 1. *(List the steps that we're actually testing to verify that they work
    correctly. Often only one, but some integration tests might contain
    multiple WHEN steps for complex situations)*
 
-**THEN (Verification steps):**
+**THEN (Verification steps):User account remains active**
+
+1. *(List the steps to verify/assert that the expected behavior actually
+   happens, include any relevant invariants here as well.)*
+
+**Is there any clean-up needed for this test?** if user exceeds comment threshold deactivate account
+ 
+1. *(Is there anything we need to do after this test finishes, to clean up and leave our service like we found it?)*
+no
+
+   
+## Use Case: *User inputs the wrong username to access account*
+
+### **Test case name: *[userInput_usernameIncorrect]***
+
+**User can access account when providing correct username**
+
+1. *(List what must be true to verify the use case has been implemented
+   correctly)*
+
+**Endpoint(s) tested:/user/{username}**
+
+1. *(List only the endpoints actually tested (the "WHEN" part of your
+   test, which might have multiple steps in an integration test))*
+
+**GIVEN (Preconditions): A username**
+
+1. *(List the conditions that must be true for the test case to take
+   place.)*
+
+**WHEN (Action(s)): Username not recognized**
+
+1. *(List the steps that we're actually testing to verify that they work
+   correctly. Often only one, but some integration tests might contain
+   multiple WHEN steps for complex situations)*
+
+**THEN (Verification steps): verify a invalidUsernameException was thrown**
 
 1. *(List the steps to verify/assert that the expected behavior actually
    happens, include any relevant invariants here as well.)*
 
 **Is there any clean-up needed for this test?**
-
+ no
 1. *(Is there anything we need to do after this test finishes, to clean
    up and leave our service like we found it?)*
+no

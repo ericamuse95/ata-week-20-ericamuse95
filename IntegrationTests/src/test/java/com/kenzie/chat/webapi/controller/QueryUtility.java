@@ -61,6 +61,12 @@ public class QueryUtility {
 
     public class ContentModerationControllerClient {
         // Add methods here
+        public ResultActions checkForSpam() throws Exception{
+            return mvc.perform(post("/moderation/checkForSpam")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON));
+        }
+
     }
 
 }
