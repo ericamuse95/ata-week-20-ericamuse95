@@ -1,17 +1,26 @@
 package com.kenzie.chat.webapi.controller;
 
+import com.kenzie.chat.usersystem.UserDto;
 import com.kenzie.chat.webapi.IntegrationTest;
 import com.kenzie.chat.webapi.controller.model.CommentCreateRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kenzie.chat.webapi.controller.model.UserCreateRequest;
+import com.kenzie.chat.webapi.service.CommentService;
 import net.andreinc.mockneat.MockNeat;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+
+import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
@@ -35,9 +44,14 @@ class CommentControllerTest {
 
         // GIVEN
         CommentCreateRequest commentRequest = new CommentCreateRequest();
+        UserCreateRequest createRequest = new UserCreateRequest();
         commentRequest.setOwner(mockNeat.strings().get());
         commentRequest.setTitle(mockNeat.strings().get());
         commentRequest.setContent(mockNeat.strings().get());
+        createRequest.setUsername(commentRequest.getOwner());
+
+        queryUtility.userControllerClient.createUser(createRequest)
+                .andExpect(status().isOk());
 
         // WHEN
         queryUtility.commentControllerClient.addComment(commentRequest)
@@ -46,6 +60,24 @@ class CommentControllerTest {
     }
 
     // Add additional tests here
+    @Test
+    public void deactivated_user_leaves_comment() throws Exception {
+        //GIVEN
+        CommentCreateRequest commentRequest = new CommentCreateRequest();
+        UserCreateRequest createRequest = new UserCreateRequest();
+        commentRequest.setOwner(mockNeat.strings().get());
+        commentRequest.setTitle(mockNeat.strings().get());
+        commentRequest.setContent(mockNeat.strings().get());
+        createRequest.setUsername(commentRequest.getOwner());
+
+        //WHEN
+        //deactivated user tries to leave comment
+        mvc.perform(
+                get("/deactivate/{username}", createRequest.getUsername())
+                        .accept(MediaType.APPLICATION_JSON))
+                //THEN
+                .andExpect(status().isNotFound());
+    }
 
 }
 
